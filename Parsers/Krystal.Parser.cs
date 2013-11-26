@@ -8,7 +8,7 @@ namespace Parsers
 {
     internal partial class KrystalParser
     {
-        public KrystalParser() : base(null) { }
+        public KrystalParser(KrystalScanner scanner) : base(scanner) { }
 
         public void Parse(string s)
         {
