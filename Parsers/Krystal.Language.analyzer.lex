@@ -20,8 +20,9 @@ COMMENT_CPP			"//"[^\n]*$
 
 /* Scanner body */
 
-{D}+					{ Console.WriteLine("token: {0}", yytext);		GetNumber(); return (int)Token.NUMBER; }
+{D}+				{ Console.WriteLine("token: {0}", yytext);		GetNumber(); return (int)Token.NUMBER; }
 
+{NL}+				/* skip */
 {WS}+				/* skip */
 
 
