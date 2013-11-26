@@ -5,10 +5,12 @@
 
 %option stack, minimize, parser, verbose, persistbuffer, noembedbuffers 
 
-Eol             (\r\n?|\n)
-NotWh           [^ \t\r\n]
-Space           [ \t]
-Number          [0-9]+
+NL					[\n\r]+
+WS					[ \t]+
+L					[a-zA-Z_]
+D					[0-9]
+ID					{L}({L}|{D})*
+COMMENT_CPP			"//"[^\n]*$
 
 %{
 
@@ -18,9 +20,9 @@ Number          [0-9]+
 
 /* Scanner body */
 
-{Number}		{ Console.WriteLine("token: {0}", yytext);		GetNumber(); return (int)Token.NUMBER; }
+{D}+					{ Console.WriteLine("token: {0}", yytext);		GetNumber(); return (int)Token.NUMBER; }
 
-{Space}+		/* skip */
+{WS}+				/* skip */
 
 
 %%
