@@ -154,3 +154,7 @@ $RECYCLE.BIN/
 
 # Mac desktop service store files
 .DS_Store
+
+# GPLEX/GPPG generated files
+*.Parser.Generated.cs
+*.Scanner.Generated.cs
