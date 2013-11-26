@@ -25,5 +25,7 @@ COMMENT_CPP			"//"[^\n]*$
 {NL}+				/* skip */
 {WS}+				/* skip */
 
+{COMMENT_CPP}		{ Console.WriteLine("\tC++ style comment: {0}", yytext); }
+
 
 %%
