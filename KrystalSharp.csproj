@@ -31,6 +31,15 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Label="YltProperties">
+    <YltTools>$(SolutionDir)packages\YaccLexTools.0.2.0\tools\</YltTools>
+    <GplexTool>"$(YltTools)gplex.exe"</GplexTool>
+    <GppgTool>"$(YltTools)gppg.exe"</GppgTool>
+    <Parsers>Krystal</Parsers>
+  </PropertyGroup>
+  <PropertyGroup Label="GenerateKrystalProperties">
+    <Krystal>$(ProjectDir)Parsers\Krystal</Krystal>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -51,7 +60,44 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup Label="KrystalFiles">
+    <Compile Include="Parsers\Krystal.Parser.cs">
+      <DependentUpon>Krystal.parser</DependentUpon>
+    </Compile>
+    <Compile Include="Parsers\Krystal.Parser.Generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Krystal.Language.grammar.y</DependentUpon>
+    </Compile>
+    <Compile Include="Parsers\Krystal.Scanner.cs">
+      <DependentUpon>Krystal.parser</DependentUpon>
+    </Compile>
+    <Compile Include="Parsers\Krystal.Scanner.Generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Krystal.Language.analyzer.lex</DependentUpon>
+    </Compile>
+    <None Include="Parsers\Krystal.Language.analyzer.lex">
+      <DependentUpon>Krystal.parser</DependentUpon>
+    </None>
+    <None Include="Parsers\Krystal.Language.grammar.y">
+      <DependentUpon>Krystal.parser</DependentUpon>
+    </None>
+    <None Include="Parsers\Krystal.parser" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="BeforeBuild" DependsOnTargets="YltBuildGen" />
+  <Target Name="YltBuildGen" DependsOnTargets="GenerateKrystal" />
+  <Target Name="GenerateKrystal" Inputs="$(Krystal).Language.analyzer.lex;$(Krystal).Language.grammar.y" Outputs="$(Krystal).Scanner.Generated.cs;$(Krystal).Parser.Generated.cs">
+    <Message Text="Generating scanner for $(Krystal) ..." />
+    <Exec Command="$(GplexTool) &quot;/out:$(Krystal).Scanner.Generated.cs&quot; &quot;$(Krystal).Language.analyzer.lex&quot;" WorkingDirectory="$(ProjectDir)" Outputs="$(GenDir)Scanner.cs">
+      <Output TaskParameter="Outputs" ItemName="KrystalScanner" />
+    </Exec>
+    <Message Text="Generating parser for $(Krystal) ..." />
+    <Exec Command="$(GppgTool) /no-lines /gplex &quot;$(Krystal).Language.grammar.y&quot; &gt; &quot;$(Krystal).Parser.Generated.cs&quot;" WorkingDirectory="$(ProjectDir)" Outputs="$(Krystal).Parser.Generated.cs">
+      <Output TaskParameter="Outputs" ItemName="Krystal" />
+    </Exec>
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
