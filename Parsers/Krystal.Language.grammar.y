@@ -13,6 +13,10 @@
 
 %token NUMBER
 
+%token BLOCK_BEGIN BLOCK_END
+%token LT GT
+%token SEMICOLON COMMA
+
 %%
 
 main   : number

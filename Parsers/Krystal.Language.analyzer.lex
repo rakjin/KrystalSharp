@@ -34,4 +34,11 @@ COMMENT_CPP			"//"[^\n]*$
 <COMMENT_C>{NL}		{ Console.Write("\n\t\t"); }
 <COMMENT_C>.		{ Console.Write("{0}", yytext); }
 
+"{"					{ return (int)Token.BLOCK_BEGIN; }
+"}"					{ return (int)Token.BLOCK_END; }
+"<"					{ return (int)Token.LT; }
+">"					{ return (int)Token.GT; }
+";"					{ return (int)Token.SEMICOLON; }
+","					{ return (int)Token.COMMA; }
+
 %%
