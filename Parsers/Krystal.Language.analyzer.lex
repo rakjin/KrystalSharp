@@ -3,7 +3,9 @@
 %visibility internal
 %tokentype Token
 
-%option stack, minimize, parser, verbose, persistbuffer, noembedbuffers 
+%option stack, minimize, parser, verbose, persistbuffer, noembedbuffers
+
+%x					COMMENT_C
 
 NL					[\n\r]+
 WS					[ \t]+
@@ -27,5 +29,9 @@ COMMENT_CPP			"//"[^\n]*$
 
 {COMMENT_CPP}		{ Console.WriteLine("\tC++ style comment: {0}", yytext); }
 
+"/*"				{ Console.Write("\tC style comment begin\n\t\t"); BEGIN(COMMENT_C); }
+<COMMENT_C>"*/"		{ Console.WriteLine("\n\tC style comment end"); BEGIN(INITIAL); }
+<COMMENT_C>{NL}		{ Console.Write("\n\t\t"); }
+<COMMENT_C>.		{ Console.Write("{0}", yytext); }
 
 %%
